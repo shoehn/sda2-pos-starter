@@ -13,13 +13,14 @@ runner="$root/tests/runner.sh"
 probe() { "$runner" "$stack" python bench/probe.py "$1"; }
 
 rows=("$(probe none)")
-for service in $("${compose[@]}" config --services); do
+for service in $("${compose[@]}" config --services | sort); do
   [ "$service" = "gateway" ] && continue
   echo "--- stopping $service" >&2
   "${compose[@]}" stop "$service" >/dev/null 2>&1
   rows+=("$(probe "$service")")
-  "${compose[@]}" up -d --wait "$service" >/dev/null 2>&1
+  "${compose[@]}" up -d --wait >/dev/null 2>&1      # all services healthy again
   "$runner" "$stack" python tests/wait_for_stack.py 90 >&2
+  sleep 3                                              # let services reconnect before the next row
 done
 
 printf '[\n%s\n]\n' "$(IFS=,; echo "${rows[*]}" | sed 's/},{/},\n{/g')"

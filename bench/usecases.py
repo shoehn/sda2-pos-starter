@@ -19,7 +19,8 @@ def checkout(rid):
 
 
 def return_item(rid):
-    sale = pos.ok(pos.sell(REGISTER, [{"product_id": 20, "qty": 1}]), 201)
+    customer = pos.SEED["customer_info"][1]["customer_id"]
+    sale = pos.ok(pos.sell(REGISTER, [{"product_id": 20, "qty": 1}], customer_id=customer), 201)
     return pos.post("/returns", {"sale_id": sale["sale_id"], "register": REGISTER, "employee_id": pos.CASHIER,
                                  "lines": [{"product_id": 20, "qty": 1}]}, request_id=rid)
 

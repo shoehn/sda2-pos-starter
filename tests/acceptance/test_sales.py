@@ -94,6 +94,12 @@ def test_unknown_product_in_sale(till):
     pos.assert_error(pos.post("/sales", body), 404, "not found")
 
 
+def test_unknown_employee_in_sale(till):
+    body = {"register": till, "employee_id": 99999, "lines": [{"product_id": FOOD, "qty": 1}],
+            "payments": [{"method": "cash", "amount": float(pos.expected_sale([{"product_id": FOOD, "qty": 1}])["total"])}]}
+    pos.assert_error(pos.post("/sales", body), 404, "not found")
+
+
 def test_unknown_customer_in_sale(till):
     pos.assert_error(pos.sell(till, [{"product_id": FOOD, "qty": 1}], customer_id=99999), 404, "not found")
 

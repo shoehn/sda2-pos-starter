@@ -8,7 +8,7 @@ import sys
 LEGACY_TABLES = [
     "customer_info", "employee_info", "stores", "store_registers", "vendorinfo", "product_inventory",
     "gift_card", "tax_table", "registers_table", "ticket_system", "cart_inprogress", "item_list",
-    "return_table", "orders_ticket", "orders",
+    "ticket_gift_payment", "return_table", "return_items", "orders_ticket", "orders",
 ]
 
 config = json.load(sys.stdin)
@@ -51,6 +51,12 @@ for store in stores:
     networks = set(services[store].get("networks") or {"default": None})
     sharing = sorted(a for a in apps if networks & set(services[a].get("networks") or {"default": None}))
     check(sharing == [owner], f"store {store} shares a network only with its owner {owner} (shares with {sharing})")
+
+if variant in ("a", "b"):
+    others = [a for a in apps if a != "gateway"]
+    check(len(others) >= 3, f"at least three application services besides the gateway ({others})")
+    gateway_stores = [s for s in stores if labels(s).get("pos.owner") == "gateway"]
+    check(not gateway_stores, f"the gateway owns no store ({gateway_stores})")
 
 if variant == "a":
     owners: dict[str, list[str]] = {}
