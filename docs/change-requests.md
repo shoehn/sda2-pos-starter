@@ -35,7 +35,7 @@ them together with the acceptance tests in their version 2 form.
 5. The Z-report and the sales report get the same `vat` field, summed over
    their sales (not reduced by returns). `tax_total` = sum of the `vat`
    values.
-6. `tax_table` is no longer used.
+6. `tax_table` is no longer used. In variant A it keeps its owner.
 
 ## CR2: Loyalty tiers
 
@@ -43,7 +43,8 @@ them together with the acceptance tests in their version 2 form.
 > return must take back the points it earned."
 
 1. A customer's **spend** is the sum of the `total` of the customer's sales in
-   the last 365 days, minus the `refund_amount` of returns of those sales.
+   the last 365 days (today and the 364 days before), minus the
+   `refund_amount` of all returns of those sales.
 2. Tier, determined **before** a sale from the spend so far:
 
    | Tier | Spend (CHF) | Points per full CHF of the sale's `total` |
@@ -53,7 +54,8 @@ them together with the acceptance tests in their version 2 form.
    | `gold` | 2000 and more | 3 |
 
    `reward_points_earned = floor(total) × points per CHF`. The sale has a new
-   field `tier` (the tier that applied).
+   field `tier`: the tier that applied, or `null` for a sale without a
+   customer.
 3. A return reduces the customer's points by
    `floor(refund_amount) × points per CHF of the original sale`. Points never
    go below 0.

@@ -13,14 +13,20 @@ The services follow the legacy data.
    `customer_info`, `employee_info`, `stores`, `store_registers`,
    `vendorinfo`, `product_inventory`, `gift_card`, `tax_table`,
    `registers_table`, `ticket_system`, `cart_inprogress`, `item_list`,
-   `return_table`, `orders_ticket`, `orders`
+   `ticket_gift_payment`, `return_table`, `return_items`, `orders_ticket`,
+   `orders`
+
+   Tables or columns that you add (for example for the change requests)
+   follow the legacy style and belong to one service; they do not need to be
+   declared.
 
 3. One source for every fact: a service does not keep a copy of data from
-   another service's tables. It asks the owner when it needs the data. Values
-   that are part of a transaction (for example the price at the time of a sale)
-   are not copies.
-4. Inside a service, the legacy table and column names stay. The gateway
-   translates to the names of the contract.
+   another service's tables. It asks the owner when it needs the data. IDs,
+   and values that are part of a transaction (for example the price at the time
+   of a sale, or the register a sale was made at), are not copies.
+4. Inside a service, the legacy table and column names stay. How the services
+   name things in their APIs to each other is your choice; the gateway speaks
+   the contract.
 5. The `gateway` routes requests and composes answers. It owns no business
    data.
 

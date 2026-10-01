@@ -21,7 +21,7 @@ Do not change this file, `shared/` or anything in `tests/`.
 | Compose | `name: pos` in every compose file. Only one stack runs at a time. |
 | Health | Every service answers `GET /health` with `200`. |
 | Seed data | Every stack starts from [`shared/seed.json`](../shared/seed.json): one key per legacy table, with the legacy column names. `make up-…` deletes all data and starts from the seed again. |
-| Data stores | Every container that holds business data (a database, or a service that keeps its data in its own container) is described in [Data ownership](#data-ownership). |
+| Data stores | Every database container is described in [Data ownership](#data-ownership). A service may also keep its data inside its own container (for example SQLite); such a service needs no store label. |
 
 ## Conventions
 
@@ -113,7 +113,8 @@ Rules (version 1):
   `tax_table` with the latest `tax_year`. `total = subtotal + tax`.
 - Every line needs enough stock; the sale reduces the stock of every line.
 - The payments add up to exactly `total`. A gift card payment reduces the
-  card's balance; the balance never goes below zero.
+  card's balance; the balance never goes below zero. Several payments with
+  the same card count together.
 - With a customer, the customer earns `floor(total)` reward points.
 
 `GET /sales/{id}` returns the same body as the `201`.
@@ -206,13 +207,15 @@ number of hops per request can be counted for any decomposition.
 
 ## Data ownership
 
-Every compose service that stores business data carries labels:
+Every database container, and in variant A every application service, carries labels:
 
 | Label | Value |
 |---|---|
-| `pos.role` | `store` for a database container |
+| `pos.role` | `store` for a database container (a message broker may use `broker`; it is not a store) |
 | `pos.owner` | for a `store`: the one service that may use it |
 | `pos.tables` | variant A only, on application services: the legacy tables the service owns, comma-separated |
 
-A store shares a network only with its owner. `make conformance-a` and
-`make conformance-b` check these rules from the compose file.
+A store shares a network only with its owner. Besides the gateway there are
+at least three application services, and the gateway owns no store.
+`make conformance-a` and `make conformance-b` check these rules from the
+compose file.

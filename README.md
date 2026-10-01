@@ -51,8 +51,8 @@ make down
 The first run downloads and builds the images and takes a few minutes.
 
 The monolith implements the contract, so `make test-baseline` passes:
-**40 passed**. It does not implement the change requests, so
-`make test-baseline-v2` ends with an error: **27 failed, 25 passed**. If you
+**41 passed**. It does not implement the change requests, so
+`make test-baseline-v2` ends with an error: **27 failed, 26 passed**. If you
 see these numbers, your setup works.
 
 Try the measurements on the monolith too: `make up-baseline`, then

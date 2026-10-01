@@ -16,8 +16,9 @@ implement one variant at a time, from the group's specification.
 2. The rules of the variant: [`variant-a/README.md`](variant-a/README.md) or
    [`variant-b/README.md`](variant-b/README.md). **Binding.**
 3. [`docs/design.md`](docs/design.md): the group's design. Follow it. If it
-   contradicts 1 or 2, or leaves a decision open, stop and ask instead of
-   guessing.
+   contradicts 1 or 2, or leaves a decision open, stop and ask. If you cannot
+   ask, decide, and add the decision to `docs/design.md` under "Decisions
+   taken by the agent" so that the group can review it.
 
 ## Layout
 
@@ -49,7 +50,9 @@ write code that detects the test environment.
 
 - Python 3.11 or newer with FastAPI is recommended; other languages are
   allowed per service.
-- One folder and one `Dockerfile` per service, inside the variant folder.
+- One folder and one `Dockerfile` per service, inside the variant folder. A
+  shared code folder (for example `common/`) is allowed; it counts as its own
+  folder in `make impact`.
 - The variant's `docker-compose.yml` sets `name: pos`. Only the service
   `gateway` publishes a port (`8000:8000`).
 - Every service answers `GET /health` with `200`, has a compose

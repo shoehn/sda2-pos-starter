@@ -146,7 +146,8 @@ tag the commit `v1`.
 
 Implement CR1 and CR2 in both variants, with the agent. Verify with
 `make test-a-v2` and `make test-b-v2`, measure again, commit and tag `v2`.
-Then run `make impact` to see how far the changes spread.
+Then run `make impact` to see how far the changes spread, and commit its
+result (it compares the tags, so it comes after `v2`).
 
 After the DDD lecture, analyse both variants in
 [`docs/domain.md`](domain.md): subdomains, the language of each service,
